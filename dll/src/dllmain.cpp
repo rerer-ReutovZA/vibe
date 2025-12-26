@@ -8,7 +8,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
     switch (ul_reason_for_call) {
         case DLL_PROCESS_ATTACH: {
             Logger::getInstance().initialize(LOG_FILE);
-            Logger::getInstance().setLogLevel(LogLevel::DEBUG);
+            Logger::getInstance().setLogLevel(LogLevel::DBG);
             Logger::getInstance().logInfo("DLL_PROCESS_ATTACH");
             CS16Capture::getInstance().initialize();
             break;

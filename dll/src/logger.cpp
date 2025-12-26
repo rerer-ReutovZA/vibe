@@ -10,7 +10,7 @@ Logger& Logger::getInstance() {
 }
 
 Logger::Logger()
-    : minLevel_(LogLevel::DEBUG)
+    : minLevel_(LogLevel::DBG)
     , initialized_(false) {
 }
 
@@ -70,7 +70,7 @@ void Logger::logError(const std::string& message) {
 }
 
 void Logger::logDebug(const std::string& message) {
-    log(LogLevel::DEBUG, message);
+    log(LogLevel::DBG, message);
 }
 
 void Logger::flush() {
@@ -94,7 +94,7 @@ std::string Logger::getLevelString(LogLevel level) {
         case LogLevel::INFO:     return "INFO";
         case LogLevel::WARNING:  return "WARNING";
         case LogLevel::ERROR:    return "ERROR";
-        case LogLevel::DEBUG:    return "DEBUG";
+        case LogLevel::DBG:      return "DBG";
         default:                 return "UNKNOWN";
     }
 }
