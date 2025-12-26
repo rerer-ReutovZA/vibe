@@ -1,0 +1,75 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Next.js
+/.next/
+/out/
+
+# Production
+/build
+/dist
+
+# Misc
+.DS_Store
+*.pem
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local env files
+.env*.local
+.env
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# DLL Build artifacts
+dll/build/
+dll/out/
+dll/*.dll
+dll/*.lib
+dll/*.exp
+dll/*.obj
+dll/*.pdb
+dll/*.ilk
+dll/*.log
+dll/.vs/
+dll/CMakeFiles/
+dll/CMakeCache.txt
+dll/cmake_install.cmake
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vcxproj.user
+
+# Logs
+*.log
+cs16_datacapture.log
+dll_log.txt
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
