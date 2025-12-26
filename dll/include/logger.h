@@ -4,7 +4,6 @@
 #include <string>
 #include <fstream>
 #include <mutex>
-#include <iostream>
 
 enum class LogLevel {
     INFO,
@@ -16,7 +15,6 @@ enum class LogLevel {
 class Logger {
 public:
     static Logger& getInstance();
-    
     void log(LogLevel level, const std::string& message);
     void logInfo(const std::string& message);
     void logWarning(const std::string& message);
