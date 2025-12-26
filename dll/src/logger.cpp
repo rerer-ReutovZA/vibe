@@ -9,44 +9,22 @@ Logger& Logger::getInstance() {
     return instance;
 }
 
-Logger::Logger()
-    : minLevel_(LogLevel::DBG)
-    , initialized_(false) {
+Logger::Logger() {
 }
 
 Logger::~Logger() {
-    close();
-}
-
-bool Logger::initialize(const std::string& filePath) {
-    std::lock_guard<std::mutex> lock(mutex_);
-    
-    if (initialized_) {
-        return true;
+    if (logFile_.is_open()) {
+        logFile_.close();
     }
-
-    logFile_.open(filePath, std::ios::out | std::ios::app);
-    if (!logFile_.is_open()) {
-        return false;
-    }
-
-    initialized_ = true;
-    log(LogLevel::INFO, "Logger initialized successfully");
-    
-    return true;
-}
-
-void Logger::setLogLevel(LogLevel level) {
-    minLevel_ = level;
 }
 
 void Logger::log(LogLevel level, const std::string& message) {
-    if (!initialized_ || level < minLevel_) {
-        return;
-    }
-
     std::lock_guard<std::mutex> lock(mutex_);
-
+    
+    if (!logFile_.is_open()) {
+        logFile_.open("dll_log.txt", std::ios::out | std::ios::app);
+    }
+    
     std::string timestamp = getTimestamp();
     std::string levelStr = getLevelString(level);
     std::string logMsg = "[" + timestamp + "] [" + levelStr + "] " + message;
@@ -55,6 +33,8 @@ void Logger::log(LogLevel level, const std::string& message) {
         logFile_ << logMsg << std::endl;
         logFile_.flush();
     }
+    
+    std::cout << logMsg << std::endl;
 }
 
 void Logger::logInfo(const std::string& message) {
@@ -71,22 +51,6 @@ void Logger::logError(const std::string& message) {
 
 void Logger::logDebug(const std::string& message) {
     log(LogLevel::DBG, message);
-}
-
-void Logger::flush() {
-    if (initialized_) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        logFile_.flush();
-    }
-}
-
-void Logger::close() {
-    if (initialized_) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        log(LogLevel::INFO, "Logger shutting down");
-        logFile_.close();
-        initialized_ = false;
-    }
 }
 
 std::string Logger::getLevelString(LogLevel level) {
