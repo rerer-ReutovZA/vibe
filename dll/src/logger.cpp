@@ -1,21 +1,21 @@
-#include "../include/logger.h"
+#include "logger.h"
 #include <chrono>
 #include <iomanip>
 #include <ctime>
-
-namespace CS16Capture {
-
-Logger::Logger() 
-    : minLevel_(LogLevel::DEBUG), initialized_(false) {
-}
-
-Logger::~Logger() {
-    close();
-}
+#include <sstream>
 
 Logger& Logger::getInstance() {
     static Logger instance;
     return instance;
+}
+
+Logger::Logger()
+    : minLevel_(LogLevel::DEBUG)
+    , initialized_(false) {
+}
+
+Logger::~Logger() {
+    close();
 }
 
 bool Logger::initialize(const std::string& filePath) {
@@ -31,8 +31,6 @@ bool Logger::initialize(const std::string& filePath) {
     }
 
     initialized_ = true;
-    
-    // Write initialization message
     log(LogLevel::INFO, "Logger initialized successfully");
     
     return true;
@@ -49,33 +47,30 @@ void Logger::log(LogLevel level, const std::string& message) {
 
     std::lock_guard<std::mutex> lock(mutex_);
 
-    std::ostringstream oss;
-    oss << "[" << getCurrentTimestamp() << "] "
-        << "[" << logLevelToString(level) << "] "
-        << message << std::endl;
-
-    logFile_ << oss.str();
-    logFile_.flush();
+    std::string timestamp = getTimestamp();
+    std::string levelStr = getLevelString(level);
+    std::string logMsg = "[" + timestamp + "] [" + levelStr + "] " + message;
+    
+    if (logFile_.is_open()) {
+        logFile_ << logMsg << std::endl;
+        logFile_.flush();
+    }
 }
 
-void Logger::debug(const std::string& message) {
-    log(LogLevel::DEBUG, message);
-}
-
-void Logger::info(const std::string& message) {
+void Logger::logInfo(const std::string& message) {
     log(LogLevel::INFO, message);
 }
 
-void Logger::warning(const std::string& message) {
+void Logger::logWarning(const std::string& message) {
     log(LogLevel::WARNING, message);
 }
 
-void Logger::error(const std::string& message) {
+void Logger::logError(const std::string& message) {
     log(LogLevel::ERROR, message);
 }
 
-void Logger::critical(const std::string& message) {
-    log(LogLevel::CRITICAL, message);
+void Logger::logDebug(const std::string& message) {
+    log(LogLevel::DEBUG, message);
 }
 
 void Logger::flush() {
@@ -94,7 +89,17 @@ void Logger::close() {
     }
 }
 
-std::string Logger::getCurrentTimestamp() const {
+std::string Logger::getLevelString(LogLevel level) {
+    switch (level) {
+        case LogLevel::INFO:     return "INFO";
+        case LogLevel::WARNING:  return "WARNING";
+        case LogLevel::ERROR:    return "ERROR";
+        case LogLevel::DEBUG:    return "DEBUG";
+        default:                 return "UNKNOWN";
+    }
+}
+
+std::string Logger::getTimestamp() {
     auto now = std::chrono::system_clock::now();
     auto time = std::chrono::system_clock::to_time_t(now);
     auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -114,16 +119,3 @@ std::string Logger::getCurrentTimestamp() const {
     
     return oss.str();
 }
-
-std::string Logger::logLevelToString(LogLevel level) const {
-    switch (level) {
-        case LogLevel::DEBUG:    return "DEBUG";
-        case LogLevel::INFO:     return "INFO";
-        case LogLevel::WARNING:  return "WARNING";
-        case LogLevel::ERROR:    return "ERROR";
-        case LogLevel::CRITICAL: return "CRITICAL";
-        default:                 return "UNKNOWN";
-    }
-}
-
-} // namespace CS16Capture
