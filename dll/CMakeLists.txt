@@ -27,7 +27,7 @@ include_directories(
 # Source files
 set(SOURCES
     src/dllmain.cpp
-    src/game_data_capture.cpp
+    src/data_capture.cpp
     src/websocket_client.cpp
     src/logger.cpp
     src/memory_reader.cpp
@@ -35,7 +35,7 @@ set(SOURCES
 
 # Header files
 set(HEADERS
-    include/game_data_capture.h
+    include/data_capture.h
     include/websocket_client.h
     include/logger.h
     include/memory_reader.h

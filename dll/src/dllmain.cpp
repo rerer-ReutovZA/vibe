@@ -1,4 +1,4 @@
-#include "../include/game_data_capture.h"
+#include "../include/data_capture.h"
 #include "../include/logger.h"
 
 #ifdef _WIN32
@@ -9,7 +9,7 @@
 #include <string>
 
 // Global instance of the capture system
-static std::unique_ptr<CS16Capture::GameDataCapture> g_captureSystem;
+static CS16Capture::DataCapture* g_captureSystem = nullptr;
 
 // Configuration
 static const std::string WS_HOST = "localhost";
@@ -32,8 +32,8 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
             LOG_INFO("=================================================");
             LOG_INFO("DLL attached to process");
 
-            // Create and initialize capture system
-            g_captureSystem = std::make_unique<CS16Capture::GameDataCapture>();
+            // Create and initialize capture system using singleton
+            g_captureSystem = CS16Capture::DataCapture::getInstance();
             
             if (g_captureSystem->initialize(WS_HOST, WS_PORT)) {
                 LOG_INFO("Capture system initialized successfully");
@@ -65,7 +65,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
             // Stop and cleanup capture system
             if (g_captureSystem) {
                 g_captureSystem->stop();
-                g_captureSystem.reset();
             }
             
             LOG_INFO("Capture system stopped and cleaned up");

@@ -13,8 +13,6 @@ MemoryReader::MemoryReader()
     : isInitialized_(false)
 #ifdef _WIN32
     , processHandle_(nullptr)
-#else
-    , socket_(-1)
 #endif
 {
 }

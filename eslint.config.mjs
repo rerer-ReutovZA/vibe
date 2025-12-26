@@ -12,6 +12,17 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // DLL build directory
+    "dll/build/**",
+    "dll/out/**",
+    "dll/*.dll",
+    "dll/*.lib",
+    "dll/*.exp",
+    "dll/*.obj",
+    "dll/*.pdb",
+    "dll/*.ilk",
+    "dll/*.log",
+    "dll/.vs/**",
   ]),
 ]);
 
